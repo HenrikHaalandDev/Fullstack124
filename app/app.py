@@ -1,5 +1,5 @@
 
-from flask import Flask, request, render_template, redirect, url_for, flash, session #type: ignore
+from flask import Flask, request, render_template, redirect, url_for, flash, jsonify, session #type: ignore
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user #type: ignore
 from flask_mail import Mail, Message #type: ignore
 from modules import User, get_db_connection, bcrypt
@@ -68,6 +68,13 @@ def account():
 def ourforms():
     return render_template('ourform.html')
 
+@app.route('/results')
+@login_required
+def results():
+    return render_template('results.html')
+
+
+
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -119,9 +126,22 @@ def form():
         else:
             User.get_user_by_email
             User.register_input_experience(experience, reuse)
-            return redirect(url_for('home'))  # Redirect to home after submission
+            return redirect(url_for('results'))  # Redirect to home after submission
     
     return render_template('ourform.html')
+
+@app.route('/api/form-data')
+def get_form_data():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT experience, COUNT(*) as count FROM formanswer GROUP BY experience")
+    data = cur.fetchall()
+    conn.close()
+
+    form_data = [{'experience': row['experience'], 'count': row['count']} for row in data]
+
+    return jsonify(form_data)
+
 
 
 @app.route('/logout', methods=['POST'])
