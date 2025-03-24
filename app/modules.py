@@ -24,6 +24,8 @@ class User(UserMixin):
 
     @staticmethod
     def get_user_by_email(email):
+        global global_email
+        global_email = email
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT * FROM user WHERE email =?", (email,))
@@ -57,9 +59,7 @@ class User(UserMixin):
     def register_input_experience(experience, reuse):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO formanswer (experience, reuse) VALUES (?, ?)", (experience, reuse))
-        cur.execute("SELECT * FROM user WHERE email =?", (email,))
-        cur.execute("INSERT INTO formanswer (user) VALUES (?)", ())
+        cur.execute("INSERT INTO formanswer (experience, reuse, user) VALUES (?, ?, ?)", (experience, reuse, global_email))
         conn.commit()
         conn.close()
 

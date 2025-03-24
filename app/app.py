@@ -13,6 +13,8 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, f
 app = Flask(__name__)
 app.secret_key = SECRET_KEY  
 
+def runonstart(email):
+    User.get_user_by_email(email) 
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -115,6 +117,7 @@ def form():
             flash('You need an input to submit')
             return redirect(url_for('form'))
         else:
+            User.get_user_by_email
             User.register_input_experience(experience, reuse)
             return redirect(url_for('home'))  # Redirect to home after submission
     
