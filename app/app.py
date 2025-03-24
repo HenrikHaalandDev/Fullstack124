@@ -104,10 +104,21 @@ def signup():
 
     return render_template('register.html')
 
-@app.route('/form', method=['GET', 'POST'])
+@app.route('/form', methods=['GET', 'POST'])
+@login_required
 def form():
     if request.method == 'POST':
-        good = 
+        experience = request.form.get('experience')
+        reuse = request.form.get('reuse')
+        print(experience, reuse)
+        if not experience and not reuse:  # Check if all inputs are empty
+            flash('You need an input to submit')
+            return redirect(url_for('form'))
+        else:
+            User.register_input_experience(experience, reuse)
+            return redirect(url_for('home'))  # Redirect to home after submission
+    
+    return render_template('ourform.html')
 
 
 @app.route('/logout', methods=['POST'])

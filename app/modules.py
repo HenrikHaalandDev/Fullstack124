@@ -52,6 +52,17 @@ class User(UserMixin):
         cur.execute("INSERT INTO user (email, password) VALUES (?, ?)", (email, hashed_pw))
         conn.commit()
         conn.close()
+    
+    @staticmethod
+    def register_input_experience(experience, reuse):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("INSERT INTO formanswer (experience, reuse) VALUES (?, ?)", (experience, reuse))
+        cur.execute("SELECT * FROM user WHERE email =?", (email,))
+        cur.execute("INSERT INTO formanswer (user) VALUES (?)", ())
+        conn.commit()
+        conn.close()
+
 
 DB_PATH = 'db/portfolio.db'
 
@@ -68,7 +79,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS formanswer (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         experience TEXT NOT NULL,
-        reuse TEXT NOT NULL)
+        reuse TEXT NOT NULL,
+        user TEXT NOT NULL)
     """)
     conn.commit()
     conn.close()
