@@ -58,8 +58,6 @@ class User(UserMixin):
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("INSERT INTO formanswer (experience, reuse) VALUES (?, ?)", (experience, reuse))
-        cur.execute("SELECT * FROM user WHERE email =?", (email,))
-        cur.execute("INSERT INTO formanswer (user) VALUES (?)", ())
         conn.commit()
         conn.close()
 
