@@ -56,10 +56,10 @@ class User(UserMixin):
         conn.close()
     
     @staticmethod
-    def register_input_experience(experience, reuse):
+    def register_input_experience(experience, reuse, better):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO formanswer (experience, reuse, user) VALUES (?, ?, ?)", (experience, reuse, global_email))
+        cur.execute("INSERT INTO formanswer (experience, reuse, better, user) VALUES (?, ?, ?, ?)", (experience, reuse, better, global_email))
         conn.commit()
         conn.close()
 
@@ -80,6 +80,7 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         experience TEXT NOT NULL,
         reuse TEXT NOT NULL,
+        better TEXT NOT NULL,
         user TEXT NOT NULL)
     """)
     conn.commit()

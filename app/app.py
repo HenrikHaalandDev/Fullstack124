@@ -119,13 +119,13 @@ def form():
     if request.method == 'POST':
         experience = request.form.get('experience')
         reuse = request.form.get('reuse')
-        print(experience, reuse)
-        if not experience and not reuse:  # Check if all inputs are empty
+        better = request.form.get('better')
+        print(experience, reuse, better)
+        if not experience and not reuse and not better:  # Check if all inputs are empty
             flash('You need an input to submit')
             return redirect(url_for('form'))
         else:
-            User.get_user_by_email
-            User.register_input_experience(experience, reuse)
+            User.register_input_experience(experience, reuse, better)
             return redirect(url_for('results'))  # Redirect to home after submission
     
     return render_template('ourform.html')
@@ -134,11 +134,11 @@ def form():
 def get_form_data():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT experience, COUNT(*) as count FROM formanswer GROUP BY experience")
+    cur.execute("SELECT experience, reuse, better, COUNT(*) as count FROM formanswer GROUP BY experience, reuse, better")
     data = cur.fetchall()
     conn.close()
 
-    form_data = [{'experience': row['experience'], 'count': row['count']} for row in data]
+    form_data = [{'experience': row['experience'], 'reuse': row['reuse'], 'better': row['better'], 'count': row['count']} for row in data]
 
     return jsonify(form_data)
 
